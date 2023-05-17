@@ -45,14 +45,14 @@ routes.delete('/:id', (req, res) => {
         } else {
             conn.query('DELETE FROM books WHERE id = ?', [req.params.id], (err, results, fields) => {
                 if (err) {
-                    console.error('Ocurrió un error al ejecutar la consulta:', err);
+                    console.error('An error occurred while executing the query:', err);
                     res.sendStatus(500); // Error interno del servidor
                 } else {
                     if (results.affectedRows === 0) {
                         res.sendStatus(404); // Recurso no encontrado
                     } else {
-                        console.log('La consulta DELETE se ejecutó correctamente');
-                        console.log('Filas afectadas:', results.affectedRows);
+                        console.log('DELETE query was executed successfully');
+                        console.log('Affected rows:', results.affectedRows);
                         res.sendStatus(204);//204 is when you do a successfull request of delete
                         //sendStatus, when you make a succesfull request of delete, This code is without body
                         //and with responses without body you use sendStatus
@@ -65,7 +65,26 @@ routes.delete('/:id', (req, res) => {
 
 
 
-
+routes.put('/:id', (req, res) => {
+    req.getConnection((err, conn) => {
+        if (err) {
+            return res.send(err);
+        }else {
+            conn.query('UPDATE books SET ? WHERE id = ?', [req.body, req.params.id], (err, results, fields) => {
+                if (err) {
+                    res.sendStatus(500);
+                }else{
+                    if (results.affectedRows === 0) {
+                        res.sendStatus(404);    
+                    }else {
+                        
+                        res.sendStatus(204)
+                    }
+                }
+            })
+        }
+    })
+})
 
 
 
